@@ -1,0 +1,13 @@
+services:
+  front:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: >
+      sh -ec "corepack enable
+      && corepack prepare pnpm@10.17.1 --activate
+      && pnpm install --config.confirmModulesPurge=false
+      && exec pnpm dev --host 0.0.0.0 --port 4321"
+    ports:
+      - "4321:4321"
