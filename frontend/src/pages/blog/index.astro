@@ -7,9 +7,17 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+// const posts = (await getCollection('blog')).sort(
+// 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+// );
+
+const response = await fetch(`${import.meta.env.DIRECTUS_URL}/items/posts`, {
+	headers: {
+		Authorization: `Bearer ${import.meta.env.DIRECTUS_TOKEN}`
+	},
+})
+
+const { data: posts } = await response.json();
 ---
 
 <!doctype html>
@@ -92,9 +100,9 @@ const posts = (await getCollection('blog')).sort(
 			<section>
 				<ul>
 					{
-						posts.map((post) => (
+						posts.map((post:any) => (
 							<li>
-								<a href={`/blog/${post.id}/`}>
+								{/* <a href={`/blog/${post.id}/`}>
 									{post.data.heroImage && (
 										<Image width={720} height={360} src={post.data.heroImage} alt="" />
 									)}
@@ -102,7 +110,12 @@ const posts = (await getCollection('blog')).sort(
 									<p class="date">
 										<FormattedDate date={post.data.pubDate} />
 									</p>
-								</a>
+								</a> */}
+								{
+									<h2>{post.title}</h2>
+									<p>{post.description}</p>
+									<p>{post.pub_date || post.date_created}</p>
+								}
 							</li>
 						))
 					}

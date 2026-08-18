@@ -12,6 +12,7 @@ services:
       && exec pnpm dev --host 0.0.0.0 --port 4321"
     ports:
       - "4321:4321"
+      - "4322:4322"
     depends_on:
       - back
   db:
