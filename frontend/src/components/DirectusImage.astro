@@ -1,0 +1,42 @@
+---
+import { getDirectusAssetUrl } from '../lib/assets.ts';
+
+interface Props {
+  id: string;
+  alt: string;
+  width: number;
+  height: number;
+  eager?: boolean;
+}
+
+const { id, alt, width, height, eager = false } = Astro.props;
+
+const src = getDirectusAssetUrl(id, {
+  width,
+  height,
+  fit: 'cover',
+  format: 'webp',
+  quality: 80,
+})
+
+const src2x = getDirectusAssetUrl(id, {
+  width: width * 2,
+  height: height * 2,
+  fit: 'cover',
+  format: 'webp',
+  quality: 80,
+})
+---
+
+{
+  src && (
+    <img 
+      src={src}
+      srcset={`${src} 1x, ${src2x} 2x`}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding='async'
+      fetchpriority={eager ? 'high' : 'auto'}
+    />
+  )
+}

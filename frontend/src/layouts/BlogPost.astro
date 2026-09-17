@@ -1,14 +1,12 @@
 ---
-import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
+import DirectusImage from '../components/DirectusImage.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import { IMAGE_SIZES } from '../consts';
 
-type Props = CollectionEntry<'blog'>['data'];
-
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImageId } = Astro.props;
 ---
 
 <html lang="en">
@@ -23,7 +21,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.hero-image {
 				width: 100%;
 			}
-			.hero-image img {
+			.hero-image :global(img) {
 				display: block;
 				margin: 0 auto;
 				border-radius: 12px;
@@ -60,7 +58,12 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+					<DirectusImage
+						id={heroImageId}
+						alt={title}
+						{...IMAGE_SIZES.postHero}
+						eager
+					/>
 				</div>
 				<div class="prose">
 					<div class="title">

@@ -5,7 +5,7 @@ export function getPublishedPosts() {
   return directus.request(readItems('posts', {
     filter: { archived: { _eq: false } },
     sort: ['date_created'],
-    fields: ['title', 'description', 'pub_date', 'date_created', 'slug'],
+    fields: ['title', 'description', 'pub_date', 'date_created', 'slug', 'hero_image'],
   }));
 }
 

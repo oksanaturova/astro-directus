@@ -1,12 +1,13 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
+import DirectusImage from '../../components/DirectusImage.astro';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SITE_DESCRIPTION, SITE_TITLE, IMAGE_SIZES } from '../../consts';
 import { getPublishedPosts } from '../../lib/posts';
+import type { $brand } from 'astro:schema';
+import { Image } from 'astro:assets';
 
 const posts = await getPublishedPosts();
 ---
@@ -39,13 +40,13 @@ const posts = await getPublishedPosts();
 				margin-bottom: 1rem;
 				text-align: center;
 			}
-			ul li:first-child img {
+			ul li:first-child :global(img) {
 				width: 100%;
 			}
 			ul li:first-child .title {
 				font-size: 2.369rem;
 			}
-			ul li img {
+			ul li :global(img) {
 				margin-bottom: 0.5rem;
 				border-radius: 12px;
 			}
@@ -65,7 +66,7 @@ const posts = await getPublishedPosts();
 			ul li a:hover .date {
 				color: rgb(var(--accent));
 			}
-			ul a:hover img {
+			ul a:hover :global(img) {
 				box-shadow: var(--box-shadow);
 			}
 			@media (max-width: 720px) {
@@ -91,12 +92,20 @@ const posts = await getPublishedPosts();
 			<section>
 				<ul>
 					{
-						posts.map((post) => (
+						posts.map((post, index) => (
 							<li>
 								{ <a href={`/blog/${post.slug}/`}>
-									{/* {post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)} */}
+									{post.hero_image && (
+										<DirectusImage
+											id={post.hero_image}
+											alt={post.title}
+											{...(index === 0
+												? IMAGE_SIZES.postListFeatured
+												: IMAGE_SIZES.postListCard
+											)}
+											eager
+										/>
+									)} 
 									<h4 class="title">{post.title}</h4>
 									<p class="date">
 										<FormattedDate date={new Date(post.pub_date ?? post.date_created)} />
